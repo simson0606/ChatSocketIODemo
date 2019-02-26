@@ -1,0 +1,6 @@
+framework module Pods_ChatSocketIODemo {
+  umbrella header "Pods-ChatSocketIODemo-umbrella.h"
+
+  export *
+  module * { export * }
+}

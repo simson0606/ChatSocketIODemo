@@ -7,14 +7,42 @@
 //
 
 import UIKit
+import MessageKit
 
-class ViewController: UIViewController {
+class ViewController: MessagesViewController, ServerConnectionMessageDelegate {
 
+    var messages: [Message] = []
+    var member: Person!
+    var other : Person!
+    
+    let serverConnection = ServerConnection.getInstance()
+
+    
     override func viewDidLoad() {
         super.viewDidLoad()
-        // Do any additional setup after loading the view, typically from a nib.
+        messagesCollectionView.messagesDataSource = self
+        messagesCollectionView.messagesLayoutDelegate = self
+        messageInputBar.delegate = self
+        messagesCollectionView.messagesDisplayDelegate = self
+    }
+    
+    override func viewDidAppear(_ animated: Bool) {
+        serverConnection.messageDelegate = self
     }
 
+    override func viewDidDisappear(_ animated: Bool) {
+        serverConnection.messageDelegate = nil
+    }
+    
+    func receivedMessage(_ message: String) {
+        let newMessage = Message(
+            member: other,
+            text: message,
+            messageId: UUID().uuidString)
+        messages.append(newMessage)
+        messagesCollectionView.reloadData()
+        messagesCollectionView.scrollToBottom(animated: true)
+    }
 
 }
 
